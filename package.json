@@ -4,6 +4,7 @@
   "description": "A simple MDX-based blog",
   "main": "build.mjs",
   "scripts": {
+    "build": "node build.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
