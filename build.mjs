@@ -13,10 +13,10 @@
 import path from "path";
 import { promises as fs } from "fs";
 import shell from "shelljs";
-import cheerio from "cheerio";
-import remark from "remark";
-import html from "remark-html";
 import report from "vfile-reporter";
+import React from "react";
+import ReactDOMServer from "react-dom/server.js";
+import MDX from "@mdx-js/runtime";
 
 ////////////////////////////////////////////////////////////////////////////////
 const __dirname = path.resolve();
@@ -47,36 +47,15 @@ async function go() {
 async function createPage(filePath) {
   let markdown = await fs.readFile(filePath);
   return new Promise(async (resolve, reject) => {
-    // add remark plugins here for syntax highlighting, etc.
-    remark()
-      .use(html)
-      .process(String(markdown), async (err, markup) => {
-        if (err) {
-          console.error(report(err));
-          reject(err);
-        }
-        let page = getPage(String(markup));
-        resolve(page);
-      });
+    try {
+      // NOTE: This is a Node environment, and JSX isn't possible without a build step.
+      const page = ReactDOMServer.renderToString(
+        React.createElement(MDX, { children: markdown })
+      );
+      resolve(page);
+    } catch (err) {
+      console.error(report(err));
+      reject(err);
+    }
   });
-}
-
-function getPage(body) {
-  let $ = cheerio.load(body);
-  let title = $("h1").text();
-  return `
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>${title}</title>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="https://unpkg.com/@exampledev/new.css@1.1.3/new.css" />
-    <style>body { font-family: "Iowan Old Style", "Apple Garamond", Baskerville, "Times New Roman", "Droid Serif", Times, "Source Serif Pro", serif; }</style>
-  </head>
-  <body>
-    ${body}
-  </body>
-</html>
-  `;
 }
