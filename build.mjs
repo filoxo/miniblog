@@ -19,24 +19,26 @@ import ReactDOMServer from "react-dom/server.js";
 import MDX from "@mdx-js/runtime";
 
 ////////////////////////////////////////////////////////////////////////////////
-const __dirname = path.resolve();
-const outputDir = "dist";
-const pagesDirectory = "pages";
+const dir = {
+  cwd: path.resolve(),
+  output: "dist",
+  pages: "pages",
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 go();
 
 ////////////////////////////////////////////////////////////////////////////////
 async function go() {
-  shell.rm("-rf", outputDir);
-  shell.mkdir(outputDir);
-  let pages = await fs.readdir(path.join(__dirname, pagesDirectory));
+  shell.rm("-rf", dir.output);
+  shell.mkdir(dir.output);
+  let pages = await fs.readdir(path.join(dir.cwd, dir.pages));
   await Promise.all(
     pages.map(async (filename) => {
-      let page = path.join(__dirname, pagesDirectory, filename);
+      let page = path.join(dir.cwd, dir.pages, filename);
       let body = await createPage(page);
       await fs.writeFile(
-        path.join(__dirname, outputDir, filename.replace(/\.md$/, ".html")),
+        path.join(dir.cwd, dir.output, filename.replace(/\.md$/, ".html")),
         body
       );
       console.log("›", filename);
