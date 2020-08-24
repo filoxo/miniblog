@@ -1,0 +1,23 @@
+{
+  "name": "miniblog",
+  "version": "1.0.0",
+  "description": "A simple MDX-based blog",
+  "main": "build.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/filoxo/miniblog.git"
+  },
+  "keywords": [
+    "mdx",
+    "blog"
+  ],
+  "author": "@filoxo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/filoxo/miniblog/issues"
+  },
+  "homepage": "https://github.com/filoxo/miniblog#readme"
+}
