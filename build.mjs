@@ -20,6 +20,7 @@ import MDX from "@mdx-js/runtime";
 
 ////////////////////////////////////////////////////////////////////////////////
 const __dirname = path.resolve();
+const outputDir = "dist";
 const pagesDirectory = "pages";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -27,15 +28,15 @@ go();
 
 ////////////////////////////////////////////////////////////////////////////////
 async function go() {
-  shell.rm("-rf", "build");
-  shell.mkdir("build");
+  shell.rm("-rf", outputDir);
+  shell.mkdir(outputDir);
   let pages = await fs.readdir(path.join(__dirname, pagesDirectory));
   await Promise.all(
     pages.map(async (filename) => {
       let page = path.join(__dirname, pagesDirectory, filename);
       let body = await createPage(page);
       await fs.writeFile(
-        path.join(__dirname, "build", filename.replace(/\.md$/, ".html")),
+        path.join(__dirname, outputDir, filename.replace(/\.md$/, ".html")),
         body
       );
       console.log("›", filename);
